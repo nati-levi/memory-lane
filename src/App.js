@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import faker from 'faker';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import { MemoriesProvider } from "./memories-provider";
+
+const memoriesProvider = new MemoriesProvider();
 
 class App extends Component {
 
@@ -10,19 +11,12 @@ class App extends Component {
         super(props);
 
         this.state = {
-            memories: [],
+            memories: memoriesProvider.getMemoriesByYearMonthDay(),
             memory: {
                 time: new Date(),
                 text: 'dfsdf'
             }
         };
-
-        for (let i = 0; i < 20; i++) {
-            this.state.memories.push({
-                time: faker.date.past(),
-                text: `${faker.lorem.sentence()} ${faker.lorem.sentence()}`
-            })
-        }
 
         this.addMemory = this.addMemory.bind(this);
         this.onInputValueChange = this.onInputValueChange.bind(this);
@@ -31,9 +25,11 @@ class App extends Component {
     addMemory(event) {
         event.preventDefault();
 
+        memoriesProvider.addMemory(this.state.memory);
+
         this.setState(state => ({
             ...state,
-            memories: [...state.memories, this.state.memory],
+            memories: memoriesProvider.getMemoriesByYearMonthDay(),
             memory: {
                 time: new Date(),
                 text: ''
@@ -58,6 +54,7 @@ class App extends Component {
     }
 
     render() {
+
         return (
             <div className="App">
                 <div className={"title"}>mem lane</div>
