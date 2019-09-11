@@ -3,6 +3,7 @@ import './App.css';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { groupBy, MONTHS } from "./utilities";
 import { observer } from 'mobx-react';
+import { MemoriesStore } from "./memories.store";
 
 const process = memories => {
 
@@ -21,6 +22,8 @@ const process = memories => {
         }
     }
 
+    // todo: add missing years, months.
+
     return byYear;
 };
 
@@ -31,10 +34,8 @@ class App extends Component {
         super(props);
 
         this.state = {
-            //memories: memoriesProvider.getMemoriesByYearMonthDay(),
             memory: {
-                id: 'new',
-                time: new Date(),
+                date: new Date(),
                 text: 'dfsdf'
             }
         };
@@ -46,18 +47,7 @@ class App extends Component {
     addMemory(event) {
         event.preventDefault();
 
-        //memoriesProvider.addMemory(this.state.memory);
-
-        this.setState(state => ({
-            ...state,
-            //memories: memoriesProvider.getMemoriesByYearMonthDay(),
-            memory: {
-                time: new Date(),
-                text: ''
-            }
-        }), () => {
-            console.log('pushed', this.state.memories);
-        });
+        this.props.store.addMemory(this.state.memory);
     }
 
     onInputValueChange(event) {
@@ -83,7 +73,7 @@ class App extends Component {
             <div className="App">
                 <h1 className={"title"}>memory lane</h1>
 
-                <h3>{state} | showing {this.props.store.memories.length} memories</h3>
+                <h3>{state} | showing {memories.length} memories</h3>
 
                 <div className={"list"}>
 
@@ -96,17 +86,17 @@ class App extends Component {
                     </div>
 
                     {Object.entries(byYear).map(([year, yearMemories]) => (
-                        <div className={"year"}>
+                        <div className={"year"} key={year}>
                             <h2 className={"title"}>{year}</h2>
                             {Object.entries(yearMemories).map(([month, monthMemories]) => (
-                                <div className={"month"}>
+                                <div className={"month"} key={month}>
                                     <h3 className={"title"}>{MONTHS[month]}</h3>
                                     <div className={"month-memories"}>
                                         {Object.entries(monthMemories).map(([day, dayMemories]) => (
-                                            <div className={"day"}>
+                                            <div className={"day"} key={day}>
                                                 <h4 className={"title"}>{day}</h4>
                                                 {dayMemories.map(memory => (
-                                                    <div className={"memory"}>
+                                                    <div className={"memory"} key={memory.id}>
                                                         <blockquote>{memory.text}</blockquote>
                                                         <time>{formatDistanceToNow(memory.date, { addSuffix: true })}</time>
                                                     </div>

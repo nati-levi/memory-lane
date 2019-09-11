@@ -1,6 +1,7 @@
 import { observable, reaction, action, runInAction } from 'mobx';
 import { MemoryModel } from "./memory.model";
 import { MemoriesApi } from "./memories.api";
+import faker from "faker";
 
 export class MemoriesStore {
 
@@ -9,7 +10,7 @@ export class MemoriesStore {
     @action
     addMemory({ text, date }) {
         this.memories.push(new MemoryModel({
-            id: 'dsdsd',
+            id: faker.random.uuid(),
             text,
             date,
         }));
