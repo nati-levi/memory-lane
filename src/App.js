@@ -3,9 +3,11 @@ import './App.css';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { MemoriesProvider } from "./memories-provider";
 import { MONTHS } from "./utilities";
+import { observer } from 'mobx-react';
 
 const memoriesProvider = new MemoriesProvider();
 
+@observer
 class App extends Component {
 
     constructor(props) {
