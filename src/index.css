@@ -9,26 +9,35 @@ html, body {
   height: 100%;
 }
 
-.title {
-  font-size: 20px;
-  margin: 20px;
+.year {
+}
+
+.month {
+  margin-left: 50px;
+}
+
+.month-memories {
+}
+
+.month > .title {
+  text-align: center;
 }
 
 .list {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  align-items: center;
-  align-content: center;
+  /*display: flex;*/
+  /*flex-direction: column;*/
+  /*flex-wrap: wrap;*/
+  /*justify-content: space-evenly;*/
+  /*align-items: center;*/
+  /*align-content: center;*/
 }
 
 .memory {
-  width: 400px;
+  /*max-width: 1000px;*/
   border: 1px solid black;
   border-radius: 10px;
   margin-bottom: 20px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /*white-space: nowrap;*/
+  /*overflow: hidden;*/
+  /*text-overflow: ellipsis;*/
 }
