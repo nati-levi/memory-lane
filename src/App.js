@@ -16,6 +16,7 @@ class App extends Component {
         this.state = {
             memories: memoriesProvider.getMemoriesByYearMonthDay(),
             memory: {
+                id: 'new',
                 time: new Date(),
                 text: 'dfsdf'
             }
@@ -61,6 +62,10 @@ class App extends Component {
         return (
             <div className="App">
                 <h1 className={"title"}>memory lane</h1>
+
+                {/*example*/}
+                <h3>store count: {this.props.store.memories.length}</h3>
+
                 <div className={"list"}>
 
                     <div className={"memory"}>
