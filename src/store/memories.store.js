@@ -1,6 +1,6 @@
 import { observable, reaction, action, runInAction, spy, computed, toJS } from 'mobx';
-import { MemoryModel } from "./memory.model";
-import { MemoriesApi } from "./memories.api";
+import { MemoryModel } from "../models/memory.model";
+import { MemoriesApi } from "../apis/memories.api";
 import faker from "faker";
 
 // spy((event) => {

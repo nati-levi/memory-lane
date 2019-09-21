@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import { App } from './components/app.component';
 import './index.css';
-import { MemoriesStore } from "./memories.store";
+import { MemoriesStore } from "./store/memories.store";
 import { configure } from "mobx";
 
 configure({ enforceActions: "observed" }); // don't allow state modifications outside actions

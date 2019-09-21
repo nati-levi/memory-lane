@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TagsSelect } from "react-select-material-ui";
+import { MultipleSelect } from "react-select-material-ui";
 import * as PropTypes from "prop-types";
 
 export class LabelsFilter extends React.Component {
@@ -8,8 +8,8 @@ export class LabelsFilter extends React.Component {
         const { labels, onChange } = this.props;
 
         return (
-            <TagsSelect
-                label="Tags"
+            <MultipleSelect
+                label="Labels"
                 options={labels}
                 onChange={onChange}
                 SelectProps={{

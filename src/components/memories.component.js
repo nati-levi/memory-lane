@@ -1,4 +1,4 @@
-import { groupBy, MONTHS } from "./utilities";
+import { groupBy, MONTHS } from "../utitlities/utilities";
 import { Memory } from "./memory.component";
 import React from "react";
 import * as PropTypes from "prop-types";
@@ -7,17 +7,21 @@ const process = (memories) => {
     let result = memories;
 
     // group by year
-    result = groupBy({ arr: result, criteria: x => x.date.getFullYear() });
+    result = groupBy({
+        arr: result, criteria: x => {
+            return new Date(x.date).getFullYear();
+        }
+    });
 
     // group by month
     for (let [key, value] of Object.entries(result)) {
-        result[key] = groupBy({ arr: value, criteria: x => x.date.getMonth() + 1 });
+        result[key] = groupBy({ arr: value, criteria: x => new Date(x.date).getMonth() + 1 });
     }
 
     // group by day
     for (let [key, value] of Object.entries(result)) {
         for (let [key2, value2] of Object.entries(value)) {
-            result[key][key2] = groupBy({ arr: value2, criteria: x => x.date.getDate() });
+            result[key][key2] = groupBy({ arr: value2, criteria: x => new Date(x.date).getDate() });
         }
     }
 
