@@ -1,30 +1,24 @@
 import React, { Component } from 'react';
 import './App.css';
-import { groupBy, MONTHS } from "./utilities";
 import { observer } from 'mobx-react';
-import { Memory } from "./memory.component";
+import { LabelsFilter } from "./labels-filter.component";
+import { MemoriesComponent } from "./memories.component";
 
-const process = memories => {
+function extractLabels(memories) {
+    const all = memories.map(m => m.labels).flat();
+    const distinct = [...new Set(all)];
+    return distinct;
+}
 
-    // group by year
-    let byYear = groupBy({ arr: memories, criteria: x => x.date.getFullYear() });
+function filterMemories({ memories, labels }) {
 
-    // group by month
-    for (let [key, value] of Object.entries(byYear)) {
-        byYear[key] = groupBy({ arr: value, criteria: x => x.date.getMonth() + 1 });
-    }
+    let result = [...memories];
 
-    // group by day
-    for (let [key, value] of Object.entries(byYear)) {
-        for (let [key2, value2] of Object.entries(value)) {
-            byYear[key][key2] = groupBy({ arr: value2, criteria: x => x.date.getDate() });
-        }
-    }
+    // filter by labels
+    result = (labels.length === 0) ? result : result.filter(m => m.labels.some(l => labels.includes(l)));
 
-    // todo: add missing years, months.
-
-    return byYear;
-};
+    return result;
+}
 
 @observer
 class App extends Component {
@@ -36,12 +30,14 @@ class App extends Component {
             memory: {
                 date: new Date(),
                 text: 'dfsdf'
-            }
+            },
+            labels: []
         };
 
         this.addMemory = this.addMemory.bind(this);
         this.updateMemory = this.updateMemory.bind(this);
         this.onInputValueChange = this.onInputValueChange.bind(this);
+        this.onLabelsFilterChange = this.onLabelsFilterChange.bind(this);
     }
 
     addMemory(event) {
@@ -68,16 +64,33 @@ class App extends Component {
         });
     }
 
+    onLabelsFilterChange(labels) {
+        this.setState({
+            ...this.state,
+            labels
+        });
+        console.log('labels', labels);
+    }
+
     render() {
         const { memories, state } = this.props.store;
+        const { labels } = this.state;
 
-        const byYear = process(memories);
+        // all memories, for debug
+        window.memories = memories;
+
+        const allLabels = extractLabels(memories);
+
+        const filteredMemories = filterMemories({ memories, labels });
 
         return (
             <div className="App">
                 <h1 className={"title"}>memory lane</h1>
 
-                <h3>{state} | showing {memories.length} memories</h3>
+                <div className={"filters"}>
+                    <LabelsFilter labels={allLabels} onChange={this.onLabelsFilterChange} />
+                </div>
+                <h3>{state} | showing {filteredMemories.length} memories</h3>
 
                 <div className={"list"}>
 
@@ -89,30 +102,8 @@ class App extends Component {
                     </form>
                     </div>
 
-                    {Object.entries(byYear).map(([year, yearMemories]) => (
-                        <div className={"year"} key={year}>
-                            <h2 className={"title"}>{year}</h2>
-                            {Object.entries(yearMemories).map(([month, monthMemories]) => (
-                                <div className={"month"} key={month}>
-                                    <h3 className={"title"}>{MONTHS[month]}</h3>
-                                    <div className={"month-memories"}>
-                                        {Object.entries(monthMemories).map(([day, dayMemories]) => (
-                                            <div className={"day"} key={day}>
-                                                <h4 className={"title"}>{day}</h4>
-                                                {dayMemories.map(memory => (
-                                                    <Memory
-                                                        key={memory.id}
-                                                        memory={memory}
-                                                        onChange={this.updateMemory}
-                                                    />
-                                                ))}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ))}
+                    <MemoriesComponent memories={filteredMemories} onMemoryChange={this.updateMemory} />
+
                 </div>
             </div>
         );

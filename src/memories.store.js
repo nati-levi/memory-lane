@@ -3,12 +3,12 @@ import { MemoryModel } from "./memory.model";
 import { MemoriesApi } from "./memories.api";
 import faker from "faker";
 
-spy((event) => {
-    console.log(event);
-    // if (event.type === 'action') {
-    //     console.log(`${event.name} with args:`, event.arguments)
-    // }
-});
+// spy((event) => {
+//     console.log(event);
+//     // if (event.type === 'action') {
+//     //     console.log(`${event.name} with args:`, event.arguments)
+//     // }
+// });
 
 export class MemoriesStore {
 
@@ -42,7 +42,7 @@ export class MemoriesStore {
 
     @action
     async fetchMemories() {
-        this.state = "pending";
+        this.state = "loading...";
         this._memories = observable.array();
 
         try {
