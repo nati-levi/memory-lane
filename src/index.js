@@ -8,8 +8,8 @@ import { configure } from "mobx";
 configure({ enforceActions: "observed" }); // don't allow state modifications outside actions
 
 const store = MemoriesStore.fromJS({});
-
 store.fetchMemories();
+store.subscribeServerToStore();
 
 ReactDOM.render(
     <App store={store} />,

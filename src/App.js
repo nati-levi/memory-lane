@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
-import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { groupBy, MONTHS } from "./utilities";
 import { observer } from 'mobx-react';
-import { MemoriesStore } from "./memories.store";
+import { Memory } from "./memory.component";
 
 const process = memories => {
 
@@ -41,6 +40,7 @@ class App extends Component {
         };
 
         this.addMemory = this.addMemory.bind(this);
+        this.updateMemory = this.updateMemory.bind(this);
         this.onInputValueChange = this.onInputValueChange.bind(this);
     }
 
@@ -48,6 +48,10 @@ class App extends Component {
         event.preventDefault();
 
         this.props.store.addMemory(this.state.memory);
+    }
+
+    updateMemory(memory) {
+        this.props.store.updateMemory({ id: memory.id, newMemory: memory });
     }
 
     onInputValueChange(event) {
@@ -65,8 +69,8 @@ class App extends Component {
     }
 
     render() {
-
         const { memories, state } = this.props.store;
+
         const byYear = process(memories);
 
         return (
@@ -96,10 +100,11 @@ class App extends Component {
                                             <div className={"day"} key={day}>
                                                 <h4 className={"title"}>{day}</h4>
                                                 {dayMemories.map(memory => (
-                                                    <div className={"memory"} key={memory.id}>
-                                                        <blockquote>{memory.text}</blockquote>
-                                                        <time>{formatDistanceToNow(memory.date, { addSuffix: true })}</time>
-                                                    </div>
+                                                    <Memory
+                                                        key={memory.id}
+                                                        memory={memory}
+                                                        onChange={this.updateMemory}
+                                                    />
                                                 ))}
                                             </div>
                                         ))}

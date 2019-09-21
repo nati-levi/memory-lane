@@ -20,6 +20,7 @@ export class MemoriesApi {
                 id: faker.random.uuid(),
                 text: `${faker.lorem.sentence()} ${faker.lorem.sentence()}`,
                 date: faker.date.past(30),
+                labels: [faker.lorem.word(), faker.lorem.word()]
             })
         }
         return fakes;

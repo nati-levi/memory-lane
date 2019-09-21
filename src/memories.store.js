@@ -1,25 +1,49 @@
-import { observable, reaction, action, runInAction } from 'mobx';
+import { observable, reaction, action, runInAction, spy, computed, toJS } from 'mobx';
 import { MemoryModel } from "./memory.model";
 import { MemoriesApi } from "./memories.api";
 import faker from "faker";
 
+spy((event) => {
+    console.log(event);
+    // if (event.type === 'action') {
+    //     console.log(`${event.name} with args:`, event.arguments)
+    // }
+});
+
 export class MemoriesStore {
 
-    @observable memories = [];
+    @observable _memories = observable.array();
+
+    @computed get memories() {
+        return this._memories;
+    };
 
     @action
     addMemory({ text, date }) {
-        this.memories.push(new MemoryModel({
-            id: faker.random.uuid(),
+        const id = faker.random.uuid(); // todo: change from faker
+
+        this._memories.push(new MemoryModel({
+            id,
             text,
             date,
+            labels: []
         }));
     }
 
     @action
+    updateMemory({ id, newMemory }) {
+        const memory = this._memories.find(m => m.id === id);
+
+        memory.text = newMemory.text;
+        memory.labels = newMemory.labels;
+        memory.date = newMemory.date;
+
+    }
+
+    @action
     async fetchMemories() {
-        this.memories = [];
         this.state = "pending";
+        this._memories = observable.array();
 
         try {
             const memories = await MemoriesApi.fetchMemories();
@@ -27,7 +51,7 @@ export class MemoriesStore {
             // after await, modifying state again, needs an actions:
             runInAction(() => {
                 this.state = "done";
-                this.memories = memories;
+                memories.forEach(m => this._memories.push(m));
             })
         } catch (error) {
             runInAction(() => {
@@ -44,12 +68,14 @@ export class MemoriesStore {
     }
 
     toJS() {
-        return this.memories.map(memory => memory.toJS());
+        return this._memories.map(memory => {
+            return toJS(memory)
+        });
     }
 
     static fromJS({ array = [] }) {
         const memoriesStore = new MemoriesStore();
-        memoriesStore.memories = array.map(memory => MemoryModel.fromJS(memory));
+        array.forEach(memory => memoriesStore.memories.push(MemoryModel.fromJS(memory)));
         return memoriesStore;
     }
 }
