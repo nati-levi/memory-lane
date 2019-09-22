@@ -4,15 +4,6 @@ import React, { Component } from "react";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import ChipInput from "material-ui-chip-input";
 
-function MemoryText({ text, onChange }) {
-    return <TextField fullWidth value={text} onChange={(event) => onChange(event.target.value)} />;
-}
-
-MemoryText.propTypes = {
-    text: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired
-};
-
 export class Memory extends Component {
 
     constructor(props) {
@@ -54,10 +45,7 @@ export class Memory extends Component {
         let { memory } = this.props;
         return (
             <div className={"memory"}>
-                <MemoryText
-                    text={memory.text}
-                    onChange={this.onTextChange}
-                />
+                <TextField fullWidth value={memory.text} onChange={(event) => this.onTextChange(event.target.value)} />
                 <time>{formatDistanceToNow(memory.date, { addSuffix: true })}</time>
                 <ChipInput
                     value={memory.labels}
