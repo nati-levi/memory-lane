@@ -6,6 +6,8 @@ import { MemoriesComponent } from "./memories.component";
 import Button from "@material-ui/core/Button";
 import faker from "faker";
 import { MemoryModel } from "../models/memory.model";
+import { PrimarySearchAppBar } from "./appbar.component";
+import Container from "@material-ui/core/Container";
 
 function fakeMemories() {
     const fakes = [];
@@ -111,28 +113,32 @@ export class App extends Component {
 
         return (
             <div className="App">
-                <h1 className={"title"}>memory lane</h1>
+                <PrimarySearchAppBar />
 
-                <div className={"filters"}>
-                    <LabelsFilter labels={allLabels} onChange={this.onLabelsFilterChange} />
-                </div>
-                <h3>{state} | showing {filteredMemories.length} memories</h3>
+                <Container maxWidth="md">
 
-                <div className={"list"}>
+                    <div className={"filters"}>
+                        <LabelsFilter labels={allLabels} onChange={this.onLabelsFilterChange} />
+                    </div>
+                    <h3>{state} | showing {filteredMemories.length} memories</h3>
 
-                    <div className={"memory"}>
-                        add memory:
-                        <form>
-                            <input type="text" name="text" placeholder="What's on your mind?"
-                                   onChange={this.onInputValueChange} value={this.state.memory.text} />
-                            <input type="submit" value="send" onClick={this.addMemory} />
-                        </form>
-                        <Button onClick={this.fakeMemories}>fake</Button>
+                    <div className={"list"}>
+
+                        <div className={"memory"}>
+                            add memory:
+                            <form>
+                                <input type="text" name="text" placeholder="What's on your mind?"
+                                       onChange={this.onInputValueChange} value={this.state.memory.text} />
+                                <input type="submit" value="send" onClick={this.addMemory} />
+                            </form>
+                            <Button onClick={this.fakeMemories}>fake</Button>
+                        </div>
+
+                        <MemoriesComponent memories={filteredMemories} onMemoryChange={this.updateMemory} />
+
                     </div>
 
-                    <MemoriesComponent memories={filteredMemories} onMemoryChange={this.updateMemory} />
-
-                </div>
+                </Container>
             </div>
         );
     }
