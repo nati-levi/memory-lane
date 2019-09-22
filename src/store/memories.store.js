@@ -19,14 +19,14 @@ export class MemoriesStore {
     };
 
     @action
-    addMemory({ text, date }) {
+    addMemory({ text, date, labels = [] }) {
         const id = faker.random.uuid(); // todo: change from faker
 
         this._memories.push(new MemoryModel({
             id,
             text,
             date,
-            labels: []
+            labels
         }));
     }
 

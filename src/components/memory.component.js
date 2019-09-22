@@ -35,12 +35,9 @@ export class Memory extends Component {
     onLabelAdd(label) {
         let { memory, onChange } = this.props;
 
-        const labels = new Set(memory.labels);
-        labels.add(label);
-
         onChange({
             ...memory,
-            labels
+            labels: memory.labels.concat([label])
         });
     }
 
