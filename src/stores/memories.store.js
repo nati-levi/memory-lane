@@ -1,14 +1,7 @@
-import { observable, reaction, action, runInAction, spy, computed, toJS } from 'mobx';
+import { observable, reaction, action, runInAction, computed, toJS } from 'mobx';
 import { MemoryModel } from "../models/memory.model";
 import { MemoriesApi } from "../apis/memories.api";
-import faker from "faker";
-
-// spy((event) => {
-//     console.log(event);
-//     // if (event.type === 'action') {
-//     //     console.log(`${event.name} with args:`, event.arguments)
-//     // }
-// });
+import { generateGuid } from "../utitlities/utilities";
 
 export class MemoriesStore {
 
@@ -20,7 +13,7 @@ export class MemoriesStore {
 
     @action
     addMemory({ text, date, labels = [] }) {
-        const id = faker.random.uuid(); // todo: change from faker
+        const id = generateGuid();
 
         this._memories.push(new MemoryModel({
             id,
@@ -38,6 +31,7 @@ export class MemoriesStore {
         memory.labels = newMemory.labels;
         memory.date = newMemory.date;
 
+        console.log('updated', memory);
     }
 
     @action
@@ -79,3 +73,5 @@ export class MemoriesStore {
         return memoriesStore;
     }
 }
+
+export const memoriesStore = MemoriesStore.fromJS({});

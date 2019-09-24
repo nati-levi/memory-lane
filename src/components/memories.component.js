@@ -1,7 +1,9 @@
 import { groupBy, MONTHS } from "../utitlities/utilities";
 import { Memory } from "./memory.component";
-import React from "react";
+import React, { useState } from "react";
 import * as PropTypes from "prop-types";
+import Collapse from "@material-ui/core/Collapse";
+import { observer } from "mobx-react";
 
 const process = (memories) => {
     let result = memories;
@@ -30,24 +32,21 @@ const process = (memories) => {
     return result;
 };
 
-export class MemoriesComponent extends React.Component {
-    constructor(props) {
-        super(props);
+const MemoriesComponent = observer(({ memories, onMemoryChange }) => {
+    let [open, setOpen] = useState(true);
 
-        this.state = {};
+    const toggle = () => {
+        open = setOpen(!open);
+    };
 
-    }
+    const byYear = process(memories);
 
-    render() {
-        const { memories, onMemoryChange } = this.props;
-
-        const byYear = process(memories);
-
-        return (
-            <div>
-                {Object.entries(byYear).map(([year, yearMemories]) => (
-                    <div className={"year"} key={year}>
-                        <h2 className={"title"}>{year}</h2>
+    return (
+        <div>
+            {Object.entries(byYear).map(([year, yearMemories]) => (
+                <div className={"year"} key={year}>
+                    <h2 className={"title"} onClick={toggle}>{year}</h2>
+                    <Collapse in={open} timeout="auto" unmountOnExit>
                         {Object.entries(yearMemories).map(([month, monthMemories]) => (
                             <div className={"month"} key={month}>
                                 <h3 className={"title"}>{MONTHS[month]}</h3>
@@ -67,14 +66,17 @@ export class MemoriesComponent extends React.Component {
                                 </div>
                             </div>
                         ))}
-                    </div>
-                ))}
-            </div>
-        );
-    }
-}
+
+                    </Collapse>
+                </div>
+            ))}
+        </div>
+    );
+});
 
 MemoriesComponent.propTypes = {
     memories: PropTypes.array.isRequired,
     onMemoryChange: PropTypes.func.isRequired,
 };
+
+export { MemoriesComponent };

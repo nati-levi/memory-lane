@@ -2,16 +2,22 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { App } from './components/app.component';
 import './index.css';
-import { MemoriesStore } from "./store/memories.store";
+import { memoriesStore } from "./stores/memories.store";
 import { configure } from "mobx";
 
 configure({ enforceActions: "observed" }); // don't allow state modifications outside actions
 
-const store = MemoriesStore.fromJS({});
-store.fetchMemories();
-store.subscribeServerToStore();
+// spy((event) => {
+//     console.log(event);
+//     // if (event.type === 'action') {
+//     //     console.log(`${event.name} with args:`, event.arguments)
+//     // }
+// });
+
+memoriesStore.fetchMemories();
+memoriesStore.subscribeServerToStore();
 
 ReactDOM.render(
-    <App store={store} />,
+    <App />,
     document.getElementById('root')
 );
