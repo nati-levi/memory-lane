@@ -8,8 +8,7 @@ export class MemoriesApi {
             const stored = localStorage.getItem(KEY);
 
             if (stored === null) {
-                const fakes = this.fakeMemories();
-                resolve(fakes);
+                resolve([]);
             }
 
             resolve(JSON.parse(stored));
