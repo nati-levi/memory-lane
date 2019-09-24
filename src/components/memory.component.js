@@ -3,6 +3,7 @@ import * as PropTypes from "prop-types";
 import React, { Component } from "react";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import ChipInput from "material-ui-chip-input";
+import Paper from "@material-ui/core/Paper";
 
 export class Memory extends Component {
 
@@ -43,8 +44,9 @@ export class Memory extends Component {
 
     render() {
         let { memory } = this.props;
+
         return (
-            <div className={"memory"}>
+            <Paper>
                 <TextField fullWidth value={memory.text} onChange={(event) => this.onTextChange(event.target.value)} />
                 <time>{formatDistanceToNow(memory.date, { addSuffix: true })}</time>
                 <ChipInput
@@ -52,7 +54,7 @@ export class Memory extends Component {
                     onAdd={this.onLabelAdd}
                     onDelete={this.onLabelRemove}
                 />
-            </div>
+            </Paper>
         );
     }
 }

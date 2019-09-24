@@ -45,7 +45,7 @@ const MemoriesComponent = observer(({ memories, onMemoryChange }) => {
         <div>
             {Object.entries(byYear).map(([year, yearMemories]) => (
                 <div className={"year"} key={year}>
-                    <h2 className={"title"} onClick={toggle}>{year}</h2>
+                    <h2 id={year} className={"title"} onClick={toggle}>{year}</h2>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         {Object.entries(yearMemories).map(([month, monthMemories]) => (
                             <div className={"month"} key={month}>

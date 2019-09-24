@@ -8,10 +8,18 @@ import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core";
 import { fakeMemories } from "../utitlities/faker.service";
 import { memoriesStore } from "../stores/memories.store";
+import ListItem from "@material-ui/core/ListItem";
+import List from "@material-ui/core/List";
+import ListItemText from "@material-ui/core/ListItemText";
+import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles(theme => ({
     container: {
         paddingTop: '100px'
+    },
+    yearList: {
+        position: 'fixed',
+        right: 0
     }
 }));
 
@@ -48,12 +56,26 @@ function insertFakeMemories() {
     });
 }
 
+function extractYears(filteredMemories) {
+
+    const years = filteredMemories.map(m => new Date(m.date).getFullYear());
+
+    const distinct = [...new Set(years)];
+
+    const sorted = distinct.sort();
+
+    return sorted;
+}
+
 const App = observer(() => {
     const [filteredLabels, setLabels] = useState([]);
     const classes = useStyles();
 
     const allLabels = extractLabels(memoriesStore.memories);
+
     const filteredMemories = filterMemories({ memories: memoriesStore.memories.slice(), labels: filteredLabels });
+
+    const years = extractYears(filteredMemories);
 
     return (
         <div className="App">
@@ -61,23 +83,27 @@ const App = observer(() => {
 
             <Container maxWidth="md" className={classes.container}>
 
-                <div className={"filters"}>
+                <List component="nav" className={classes.yearList}>
+                    {years.map(year => (
+                        <ListItem dense>
+                            <Link href={`#${year}`}><ListItemText primary={year} /></Link>
+                        </ListItem>
+                    ))}
+                </List>
+
+                <div>
                     <LabelsFilter labels={allLabels} onChange={setLabels} />
                 </div>
 
                 <h3>{memoriesStore.state} | showing {filteredMemories.length} memories</h3>
 
-                <div className={"list"}>
-
-                    <div className={"memory"}>
-                        add memory:
-                        {/*<form>*/}
-                        {/*    <input type="text" name="text" placeholder="What's on your mind?"*/}
-                        {/*           onChange={this.onInputValueChange} value={this.state.memory.text} />*/}
-                        {/*    <input type="submit" value="send" onClick={addMemory} />*/}
-                        {/*</form>*/}
-                        <Button onClick={insertFakeMemories}>fake</Button>
-                    </div>
+                <div>
+                    {/*<form>*/}
+                    {/*    <input type="text" name="text" placeholder="What's on your mind?"*/}
+                    {/*           onChange={this.onInputValueChange} value={this.state.memory.text} />*/}
+                    {/*    <input type="submit" value="send" onClick={addMemory} />*/}
+                    {/*</form>*/}
+                    <Button onClick={insertFakeMemories}>fake</Button>
 
                     <MemoriesComponent memories={filteredMemories} onMemoryChange={updateMemory} />
 
